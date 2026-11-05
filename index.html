@@ -19,7 +19,7 @@
         <!-- Header & Navigation -->
     <header>
         <div class="logo">
-            <strong>b.name</strong>
+            <strong>lae is my only love</strong>
         </div>
         
         <!-- Primary Navigation Menu -->
@@ -59,10 +59,12 @@
     <main>
         <!-- Hero Section -->
         <section id="home">
-            <h1 class="reveal">Built For What's Next.</h1>
+            <!-- Our JavaScript will target this id to break apart text strings -->
+            <h1 id="scatter-headline" class="reveal">Built For What's Next.</h1>
             <p class="reveal">We combine high-impact strategy with next-gen design to scale your brand seamlessly.</p>
             <a href="#contact" class="reveal"><button>Get a Free Quote</button></a>
         </section>
+
 
         <!-- Services Section -->
         <section id="services">
@@ -142,6 +144,50 @@
 
         const hiddenElements = document.querySelectorAll('.reveal');
         hiddenElements.forEach((el) => observer.observe(el));
+            <!-- Letter Scattering Interactive Script -->
+        const headline = document.getElementById('scatter-headline');
+        const text = headline.textContent;
+        headline.textContent = ''; // Clear default plain string
+
+        // 1. Convert text layout into trackable letter spans
+        const letters = Array.from(text).map(char => {
+            const span = document.createElement('span');
+            // Keep empty spaces layout formatting accurate
+            if (char === ' ') {
+                span.innerHTML = '&nbsp;';
+            } else {
+                span.textContent = char;
+            }
+            span.style.display = 'inline-block';
+            span.style.transition = 'transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+            span.style.cursor = 'default';
+            headline.appendChild(span);
+            return span;
+        });
+
+        // 2. Add mouse pointer hit detection event rules
+        letters.forEach(letter => {
+            letter.addEventListener('pointerenter', () => {
+                // Calculate extreme random scattering distance coordinates
+                const randomX = (Math.random() - 0.5) * 160; 
+                const randomY = (Math.random() - 0.5) * 160;
+                const randomRotate = (Math.random() - 0.5) * 90;
+
+                // Scatter away instantly
+                letter.style.transform = `translate(${randomX}px, ${randomY}px) rotate(${randomRotate}deg)`;
+                letter.classList.add('scattered');
+            });
+        });
+
+        // 3. Automated recovery system - resets grid every 5 seconds
+        setInterval(() => {
+            letters.forEach(letter => {
+                letter.style.transform = 'translate(0px, 0px) rotate(0deg)';
+                letter.classList.remove('scattered');
+            });
+        }, 5000);
+
     </script>
+    
 </body>
 </html>
